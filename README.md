@@ -10,6 +10,9 @@
  - https://github.com/WARP-V/Sizing-Cart_Service
  - https://github.com/WARP-V/Review-Service
 
+## Contributors
+ - Blake Forrest https://github.com/blakef87
+
 ## Table of Contents
 
 1. [Usage](#Usage)
@@ -41,5 +44,21 @@ Run the following commands when starting the project:
   - Database = Mondodb with Mongoose
   - Server = Node with Express
 
+## API Endpoints
 
+  - CREATE/POST:
+    - shoes/
+  - READ/GET:
+    - shoes/:name/sizes
+    - shoes/:shoeId/sizes
+    - shoes/:name/descrip
+    - shoes/:shoeId/descrip
+  - READ ALL/GET ALL
+    - shoes/
+  - UPDATE/PATCH:
+    - shoes/:name
+    - shoes/:shoeId
+  - DELETE:
+    - shoes/:name
+    - shoes/:shoeId
 
