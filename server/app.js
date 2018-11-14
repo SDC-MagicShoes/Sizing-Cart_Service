@@ -21,6 +21,7 @@ app.get('/:shoeId/sizes', (req, res) => {
     }
   });
 });
+app.get('/:name/sizes', (req, res) => {});
 
 app.get('/:shoeId/descrip', (req, res) => {
   const { shoeId } = req.params;
@@ -32,5 +33,18 @@ app.get('/:shoeId/descrip', (req, res) => {
     }
   });
 });
+app.get('/:name/descrip', (res, req) => {});
+
+app.route('/')
+  .get((res, req) => {}) //get all
+  .post((res, req) => {});
+
+app.route('/:shoeId')
+  .patch((res, req) => {})
+  .delete((res, req) => {});
+
+app.route('/:name')
+  .patch((res, req) => {})
+  .delete((res, req) => {});
 
 module.exports = app;
