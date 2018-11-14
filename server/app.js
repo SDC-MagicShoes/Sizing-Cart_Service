@@ -21,6 +21,7 @@ app.get('/:shoeId/sizes', (req, res) => {
     }
   });
 });
+app.get('/:name/sizes', (req, res) => {});
 
 app.get('/:shoeId/descrip', (req, res) => {
   const { shoeId } = req.params;
@@ -32,5 +33,52 @@ app.get('/:shoeId/descrip', (req, res) => {
     }
   });
 });
+app.get('/:name/descrip', (res, req) => {});
+
+app.route('/')
+  .get((res, req) => {
+    findAll((error, description) => {
+      if (error) {
+        res.sendStatus(500);
+      } else {
+        res.send(description);
+      }
+    })
+  }) //get all
+  .post((res, req) => {
+    insertOne(req.body, (error) => {
+      if (error) {
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(201);
+      }
+    })
+  });
+
+app.route('/:shoeId')
+  .patch((res, req) => {
+    const { shoeId } = req.params;
+    update(shoeId, req.body, (error) => {
+      if (error) {
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(204);
+      }
+    })
+  })
+  .delete((res, req) => {
+    const { shoeId } = req.params;
+    deleteOne(shoeId, (error) => {
+      if (error) {
+        res.sendStatus(500);
+      } else {
+        res.sendStatus(202);
+      }
+    })
+  });
+
+app.route('/:name')
+  .patch((res, req) => {})
+  .delete((res, req) => {});
 
 module.exports = app;

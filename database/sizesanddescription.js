@@ -32,6 +32,46 @@ const getDescription = (shoeId, callback) => {
   });
 };
 
+const findAll = (callback) => {
+  SizesAndDescription.find({}, (error, documents) => {
+    if (error) {
+      callback(error, null);
+    } else {
+      callback(null, documents);
+    }
+  })
+}
+
+const insertOne = (info, callback) => {
+  SizesAndDescription.insert({sizes: info.sizes, style: info.style, description: info.description, shown: info.shown}, (error) => {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null);
+    }
+  });
+};
+
+const update = (shoeId, info, callback) => {
+  SizesAndDescription.replaceOne({shoeId: shoeId}, {sizes: info.sizes, style: info.style, description: info.description, shown: info.shown}, (error) => {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null);
+    }
+  })
+}
+
+const deleteOne = (shoeId, callback) => {
+  SizesAndDescription.deleteOne({shoeId: shoeId}, (error) => {
+    if (error) {
+      callback(error);
+    } else {
+      callback(null);
+    }
+  })
+}
+
 
 module.exports = SizesAndDescription;
 module.exports.getSizes = getSizes;
