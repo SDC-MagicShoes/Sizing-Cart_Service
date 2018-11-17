@@ -4,9 +4,9 @@ const mongoose = require('mongoose');
 require('./index.js');
 
 const sizesAndDescriptionSchema = new mongoose.Schema({
-  shoeId: { type: String },
+  shoeId: Number,
+  shoeName: String,
   sizes: [Number],
-  style: String,
   description: String,
   shown: String,
 });

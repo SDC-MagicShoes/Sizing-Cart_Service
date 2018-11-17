@@ -1,58 +1,124 @@
-const SizesAndDescription = require('./sizesanddescription.js');
+//const SizesAndDescription = require('./sizesanddescription.js');
+const faker = require('faker');
+const fs = require('fs');
 
-const shoeIDs = [
-  '310805-408', '310806-408', '310806-002', '305381-113', '852542-306', '554724-062', '554724-113', '554724-071',
-  '554724-610', '554724-050', '554724-109', 'AR4491-001', 'AR4491-700', 'AV3922-601', 'AV3922-348', 'AV3922-001',
-  'AT3146-001', 'AV1200-600', 'AV1200-007', 'AV1200-008', 'AV1200-401', 'AV1200-100', 'AV1200-200', 'AV1200-001',
-  '315371-006', '315371-300', '310805-160', '136027-148', 'AV7008-700', 'AV7007-001', 'AR5599-006', 'AT4040-601',
-  '820273-300', '820273-400', '820273-600', '820276-006', '554725-065', '640734-065', '640734-071', 'AR6351-113',
-  'AR6352-113', 'AT8012-601', 'AT8011-407', 'BV8017-445', '384665-104', '305368-113', '440888-148', '884129-035',
-  '414575-035', '151186-301', '850000-301', 'AA2494-801', 'AA2494-401', 'AA2494-701', '555088-801', '555088-401',
-  'AQ7924-001', 'AQ7924-305', 'AQ7924-107', 'AQ7924-601', 'AQ7924-100', 'AQ9119-300', 'AQ9119-001', '555112-001',
-  '640735-065', '640735-071', 'AT4612-500', 'AT4613-500', 'BV8018-445', 'AR4430-016', 'AR4430-105', 'AR4430-003',
-  'AR4430-200', 'AR4430-023', 'AR1000-001', 'AR1000-006', 'AR1000-003', 'AR1000-023', '580603-603', '580603-300',
-  '580603-401', '580603-001', 'AO9744-600', '384666-104', '384667-104', 'AJ7984-002', 'AJ7984-600', 'AJ7984-001',
-  'AO2649-001', 'AO2649-301', 'AO2649-023', 'AO2649-007', 'AO2649-002', 'AJ7990-003', 'AJ7990-001', 'AJ7990-301',
-  'AJ7990-006', 'AA2517-600', 'AA2517-005', 'AA2517-002', 'AA2517-062', 'AA2517-023', 'AA2517-004', '684915-106',
-  'AH8109-003', 'AH8109-600', 'AH8109-100', 'AH8109-002', 'AO1561-003', 'AO1561-117', 'AO1561-010', 'AO1561-011',
-  'AO1561-107', 'AO1560-010', 'AO1560-117', 'AA1253-105', 'AA1253-400', 'AQ9084-063', 'AQ9084-006', 'AQ9084-100',
-  'AQ9084-300', 'AQ9084-010',
-];
+const records = 10000000;
+const seedStream = fs.createWriteStream('./seed.csv');
+let i = 1;
+let j = 1;
 
-const description = "Featuring soft, lightweight cushioning, the Air Jordan Retro Men's Shoe offers performance-inspired comfort and iconic Air Jordan detailing.";
-const shown = 'Black/Sail/Gym Red/Gym Red';
+const seed = () => {
 
-const randomSizesGenerator = (countOfSizes, minValue, maxValue) => new Array(countOfSizes)
-  .fill(0)
-  .map(() => Math.round(Math.random() * ((2 * maxValue) - (2 * minValue)) + (2 * minValue)) / 2);
+  seedStream.write('shoeId, shoeName, sizes, description, shown\n');
 
+  const createSchema = (num, cb) => {
 
-const sizesAndDescriptionSchema = []; const minValue = 7; const maxValue = 18; const
-  countOfSizes = 18;
+    while (i <= num) {
 
+      let sizes = '';
+      let sizeContainer = {};
+      for (let j = 0; j < 18; j++) {
+        let size = Math.round(Math.random() * ((2 * 18) - (2 * 7)) + (2 * 7)) / 2;
+        if (sizeContainer[size] !== 0) {
+          //sizes.push(size);
+          sizes += `${size} `;
+        } else {
+          sizeContainer[size] = 0;
+        }
+      }
 
-for (let i = 0; i < shoeIDs.length; i += 1) {
-  sizesAndDescriptionSchema.push({
-    shoeId: shoeIDs[i],
-    sizes: randomSizesGenerator(countOfSizes, minValue, maxValue),
-    style: shoeIDs[i],
-    description,
-    shown,
+      let shoeString = '';
+      shoeString += i.toString() + ',';
+      shoeString += `MagicShoes_${i},`;
+      shoeString += `${sizes},`;
+      shoeString += `${faker.lorem.sentences()},`;
+      shoeString += 'Black/Sail/Gym Red/Gym Red\n';
+
+      i += 1;
+
+      if (!seedStream.write(shoeString)) {
+        return;
+      }
+    }
+
+    seedStream.end();
+    cb();
+  }
+
+  seedStream.on('drain', () => {
+    createSchema(records, () => {
+      console.log('seeding complete');
+    })
   });
+
+  createSchema(records, () => {
+    console.log('seeding complete');
+  })
 }
 
+seed();
+// // const importData = require('../seed.csv');
 
-SizesAndDescription.deleteMany({}, (error) => {
-  if (error) {
-    console.log(error);
-  } else {
-    SizesAndDescription.insertMany(sizesAndDescriptionSchema, (err, documents) => {
-      if (err) {
-        console.log(err);
-      } else {
-        console.log(`=-=-=-=-=-= FINISHED DB SEEDING WITH ${documents.length} DOCS =-=-=-=-=-=`);
-      }
-      process.exit();
-    });
-  }
-});
+// const records = 1000000;
+
+// // const description = faker.lorem.sentences();
+// const shown = 'Black/Sail/Gym Red/Gym Red';
+
+// const sizesAndDescriptionSchema = []; const minValue = 7; const maxValue = 18; const
+//   countOfSizes = 18;
+
+
+// for (let i = 1; i <= records; i += 1) {
+//   let sizes = [];
+//   let sizeContainer = {};
+//   for (let j = 0; j < 18; j++) {
+//     let size = Math.round(Math.random() * ((2 * 18) - (2 * 7)) + (2 * 7)) / 2;
+//     if (sizeContainer[size] === 0) {
+//       sizes.push(size);
+//     } else {
+//       sizeContainer[size] = 0;
+//     }
+//   }
+
+//   sizesAndDescriptionSchema.push({
+//     id: i,
+//     shoeName: 'Air Jordans ' + i,
+//     sizes: sizes,
+//     description: faker.lorem.sentences(),
+//     shown
+//   });
+// }
+
+// function convertToCSV(objArray) {
+//   var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
+//   var str = '';
+//   for (var j = 0; j < array.length; j++) {
+//     var line = '';
+//     for (var index in array[j]) {
+//       if (line != '') line += ','
+//         line += array[j][index];
+//       }
+//       str += line + '\r\n';
+//     }
+//     return str;
+// }
+
+// var data = convertToCSV(sizesAndDescriptionSchema);
+
+// var stream = fs.createWriteStream('seed.csv', {flags: 'a'});
+
+// SizesAndDescription.deleteMany({}, (error) => {
+//   if (error) {
+//     console.log(error);
+//   } else {
+//     SizesAndDescription.insertMany(data, (err, documents) => {
+//       if (err) {
+//         console.log(err);
+//       } else {
+//         console.log(`=-=-=-=-=-= FINISHED DB SEEDING WITH ${documents.length} DOCS =-=-=-=-=-=`);
+//         //console.log(documents);
+//       }
+//       process.exit();
+//     });
+//   }
+// });
