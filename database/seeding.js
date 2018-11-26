@@ -9,29 +9,29 @@ let j = 1;
 
 const seed = () => {
 
-  seedStream.write('shoeId, shoeName, sizes, description, shown\n');
+  // seedStream.write('shoeId\t shoeName\t sizes\t description\t shown\n');
 
   const createSchema = (num, cb) => {
 
     while (i <= num) {
 
-      let sizes = '';
+      let sizes = [];
       let sizeContainer = {};
       for (let j = 0; j < 18; j++) {
         let size = Math.round(Math.random() * ((2 * 18) - (2 * 7)) + (2 * 7)) / 2;
         if (sizeContainer[size] !== 0) {
           //sizes.push(size);
-          sizes += `${size} `;
+          sizes.push(size);
         } else {
           sizeContainer[size] = 0;
         }
       }
 
       let shoeString = '';
-      shoeString += i.toString() + ',';
-      shoeString += `MagicShoes_${i},`;
-      shoeString += `${sizes},`;
-      shoeString += `${faker.lorem.sentences()},`;
+      shoeString += i.toString() + '\t';
+      shoeString += `MagicShoes_${i}\t`;
+      shoeString += `[${sizes}]\t`;
+      shoeString += `${faker.lorem.sentences()}\t`;
       shoeString += 'Black/Sail/Gym Red/Gym Red\n';
 
       i += 1;
@@ -57,55 +57,6 @@ const seed = () => {
 }
 
 seed();
-// // const importData = require('../seed.csv');
-
-// const records = 1000000;
-
-// // const description = faker.lorem.sentences();
-// const shown = 'Black/Sail/Gym Red/Gym Red';
-
-// const sizesAndDescriptionSchema = []; const minValue = 7; const maxValue = 18; const
-//   countOfSizes = 18;
-
-
-// for (let i = 1; i <= records; i += 1) {
-//   let sizes = [];
-//   let sizeContainer = {};
-//   for (let j = 0; j < 18; j++) {
-//     let size = Math.round(Math.random() * ((2 * 18) - (2 * 7)) + (2 * 7)) / 2;
-//     if (sizeContainer[size] === 0) {
-//       sizes.push(size);
-//     } else {
-//       sizeContainer[size] = 0;
-//     }
-//   }
-
-//   sizesAndDescriptionSchema.push({
-//     id: i,
-//     shoeName: 'Air Jordans ' + i,
-//     sizes: sizes,
-//     description: faker.lorem.sentences(),
-//     shown
-//   });
-// }
-
-// function convertToCSV(objArray) {
-//   var array = typeof objArray != 'object' ? JSON.parse(objArray) : objArray;
-//   var str = '';
-//   for (var j = 0; j < array.length; j++) {
-//     var line = '';
-//     for (var index in array[j]) {
-//       if (line != '') line += ','
-//         line += array[j][index];
-//       }
-//       str += line + '\r\n';
-//     }
-//     return str;
-// }
-
-// var data = convertToCSV(sizesAndDescriptionSchema);
-
-// var stream = fs.createWriteStream('seed.csv', {flags: 'a'});
 
 // SizesAndDescription.deleteMany({}, (error) => {
 //   if (error) {
