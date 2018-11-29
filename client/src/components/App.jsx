@@ -5,6 +5,7 @@ import Sizes from './Sizes';
 const _ = require('lodash');
 
 class App extends React.Component {
+
   static sortSizes(a, b) {
     return a - b;
   }
@@ -18,7 +19,7 @@ class App extends React.Component {
         [7, 7.5, 8, 8.5, 9, 9.5, 10, 10.5, 11, 11.5, 12, 12.5, 13, 14, 15, 16, 17, 18], 5,
       ),
       description: '',
-      shoeId: '310805-408',
+      shoeId: 100000,
       curButton: -1,
     };
     this.setCurrent = this.setCurrent.bind(this);
@@ -31,7 +32,7 @@ class App extends React.Component {
 
   getSizes() {
     const { shoeId } = this.state;
-    axios.get(`/${shoeId}/sizes`)
+    axios.get(`http://localhost:3003/${shoeId}/sizes`)
       .then((response) => {
         let sizes = response.data;
         sizes = sizes.sort(this.sortSizes);
@@ -41,10 +42,10 @@ class App extends React.Component {
 
   getDescription() {
     const { shoeId } = this.state;
-    axios.get(`/${shoeId}/descrip`)
+    axios.get(`http://localhost:3003/${shoeId}/descrip`)
       .then((response) => {
         const description = response.data;
-        this.setState({ description });
+        this.setState({ description }); 
       });
   }
 
@@ -55,17 +56,14 @@ class App extends React.Component {
   }
 
   render() {
-    const {
-      sizes, curButton, description, defaultSizes,
-    } = this.state;
 
     return (
       <div id="sizesAndDescription">
         <Sizes
-          sizes={sizes}
-          curButton={curButton}
+          sizes={this.state.sizes}
+          curButton={this.state.curButton}
           setCurrent={this.setCurrent}
-          defaultSizes={defaultSizes}
+          defaultSizes={this.state.defaultSizes}
         />
         <div className="cart">
           <button type="button" className="cart-button">Add to Cart</button>
@@ -73,16 +71,16 @@ class App extends React.Component {
         </div>
         <div className="description-paragraph">
           <p>
-            { description[2] }
+            { this.state.description[2] }
           </p>
         </div>
         <div className="description-details">
           <ul className="details">
             <li>
-              { `Shown: ${description[1]}` }
+              { `Shown: ${this.state.description[1]}` }
             </li>
             <li>
-              { `Style: ${(description[0])}` }
+              { `Style: ${(this.state.description[0])}` }
             </li>
           </ul>
           <div className="description-readmore">Read more</div>

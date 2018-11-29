@@ -17,12 +17,17 @@ client.connect();
 //   `SELECT * FROM sizesanddescriptions WHERE shoeid = ${shoeid}`, () => {
 //     client.end();
 //   });
-const getSizesAndDescription = (shoeid, callback) => {
+const getSizes = (shoeid, callback) => {
   client.query(`SELECT * FROM sizesanddescriptions WHERE shoeid = ${shoeid}`).then(results => {
-  	callback(null, results.rows[0]);
+  	callback(null, results.rows[0].sizes);
   })
-  //callback(null, shoeid);
 };
 
-// module.exports = SizesAndDescription;
-module.exports.getSizesAndDescription = getSizesAndDescription;
+const getDescription = (shoeid, callback) => {
+  client.query(`SELECT * FROM sizesanddescriptions WHERE shoeid = ${shoeid}`).then(results => {
+  	callback(null, [results.rows[0].style, results.rows[0].shown, results.rows[0].description]);
+  })
+};
+
+module.exports.getSizes = getSizes;
+module.exports.getDescription = getDescription;

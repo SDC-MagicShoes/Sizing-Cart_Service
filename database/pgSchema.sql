@@ -10,4 +10,4 @@ CREATE TABLE IF NOT EXISTS sizesanddescriptions(
   shown TEXT
 );
 
-COPY sizesanddescriptions FROM '/Users/blakeforrest/SDC/sizing-cart_service/seed.csv' delimiter E'\t';
+\COPY sizesanddescriptions FROM '/Users/blakeforrest/SDC/sizing-cart_service/seed.csv' delimiter E'\t';

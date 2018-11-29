@@ -1,11 +1,12 @@
 require('newrelic');
 
 const express = require('express');
+const cors = require('cors');
 
 const app = express();
 const bodyParser = require('body-parser');
 const path = require('path');
-const { getSizesAndDescription } = require('../database/indexP.js');
+const { getSizes, getDescription } = require('../database/indexP.js');
 // const { getDescription } = require('../database/sizesanddescription.js');
 
 
@@ -13,15 +14,28 @@ app.use(express.static(path.join(__dirname, '../client/dist')));
 app.use(bodyParser.json());
 
 
-app.get('/:shoeId/sizes', (req, res) => {
+app.get('/:shoeId/sizes', cors(), (req, res) => {
   // console.log(req.params);
   const { shoeId } = req.params;
-  getSizesAndDescription(shoeId, (error, sizes) => {
+  getSizes(shoeId, (error, sizes) => {
     console.log(error, sizes);
     if (error) {
       res.sendStatus(500);
     } else {
       res.send(sizes);
+    }
+  });
+});
+
+app.get('/:shoeId/descrip', cors(), (req, res) => {
+  // console.log(req.params);
+  const { shoeId } = req.params;
+  getDescription(shoeId, (error, descrip) => {
+    console.log(error, descrip);
+    if (error) {
+      res.sendStatus(500);
+    } else {
+      res.send(descrip);
     }
   });
 });
